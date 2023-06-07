@@ -27,7 +27,7 @@ node {
     stage("run script") {
 
         // Jenkins CLI 命令
-        def jenkinsCliCommand = "${jenkins.javeExec} -jar jenkins-cli.jar -s ${jenkins.url} -webSocket -auth ${jenkins.username}:${jenkins.password}"
+        def jenkinsCliCommand = "${jenkins.javaExec} -jar jenkins-cli.jar -s ${jenkins.url} -webSocket -auth ${jenkins.username}:${jenkins.password}"
 
         def groovyScript = readFile file: "./jenkins/delete-all-jobs.groovy"
 
