@@ -17,8 +17,8 @@ node {
     stage("download cli") {
 
         // 定义 Jenkins CLI 文件的 URL
-        def jenkinsCliUrl = "http://${jenkins.url}/jnlpJars/jenkins-cli.jar"
-        sh "curl -o jenkins-cli.jar ${jenkinsCliUrl}"   
+        def jenkinsCliUrl = "${jenkins.url}/jnlpJars/jenkins-cli.jar"
+        sh "curl -o jenkins-cli.jar ${jenkinsCliUrl}"
     }
 
     stage("run script") {
