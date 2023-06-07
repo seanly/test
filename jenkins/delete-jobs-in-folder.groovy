@@ -22,7 +22,7 @@ if (demoFolder instanceof AbstractFolder) {
 
         // 检查 job 是否存在并且不在运行中
         if (job && !job.isBuilding()) {
-            jenkins.deleteJob(jobName)
+            //job.delete()
             println("Deleted job: ${jobName}")
         } else if (job) {
             println("Skipping job: ${jobName} (Job is currently running)")
