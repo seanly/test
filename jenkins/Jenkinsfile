@@ -1,0 +1,35 @@
+
+/*
+
+# oes-template configure
+
+```yaml
+jenkins:
+  url: xxx
+  username: xxxx # or credentials
+  password: xxx
+  javeExec: /usr/local/java111/bin/java
+
+```
+*/
+
+node {
+    stage("download cli") {
+
+        // 定义 Jenkins CLI 文件的 URL
+        def jenkinsCliUrl = "http://${jenkins.url}/jnlpJars/jenkins-cli.jar"
+        sh "curl -o jenkins-cli.jar ${jenkinsCliUrl}"   
+    }
+
+    stage("run script") {
+
+        // Jenkins CLI 命令
+        def jenkinsCliCommand = "${jenkins.javeExec} -jar jenkins-cli.jar -s ${jenkins.url} -webSocket -auth ${jenkins.username}:${jenkins.password}"
+
+        def groovyScript = readFile file: "./delete-all-jobs.groovy"
+
+        // 执行 Jenkins CLI 命令并传递 Groovy 脚本
+        def listCmd = "${jenkinsCliCommand} groovy = <<< EOF\n${groovyScript}\nEOF"
+        sh(script: listCmd)
+    }
+}
