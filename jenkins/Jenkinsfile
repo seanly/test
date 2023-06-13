@@ -1,38 +1,36 @@
-
 /*
 
 # oes-template configure
 
 ```yaml
-jenkins:
-  url: xxx
-  username: xxxx # or credentials
-  password: xxx
-  javeExec: /usr/local/java111/bin/java
+config:
+  credentials: jenkins-admin
+  groovyScript: |
+    println("hello")
 
 ```
 */
 
 node {
-    stage("checkout code") {
-        checkout scm
-    }
     stage("download cli") {
-
         // 定义 Jenkins CLI 文件的 URL
-        def jenkinsCliUrl = "${jenkins.url}/jnlpJars/jenkins-cli.jar"
+        def jenkinsCliUrl = '${JENKINS_URL}/jnlpJars/jenkins-cli.jar'
         sh "curl -o jenkins-cli.jar ${jenkinsCliUrl}"
     }
 
     stage("run script") {
 
-        // Jenkins CLI 命令
-        def jenkinsCliCommand = "${jenkins.javaExec} -jar jenkins-cli.jar -s ${jenkins.url} -webSocket -auth ${jenkins.username}:${jenkins.password}"
+        withCredentials([
+            usernamePassword(credentialsId: "${config.credentials}", passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')
+        ]) {
+            // Jenkins CLI 命令
+            def jenkinsCliCommand = '${SLAVE_JAVA_EXEC} -jar jenkins-cli.jar -s ${JENKINS_URL} -webSocket -auth ${USERNAME}:${PASSWORD}'
 
-        def groovyScript = readFile file: "./jenkins/delete-all-jobs.groovy"
+            writeFile file: "./__run.groovy", text: "${config.groovyScript}"
 
-        // 执行 Jenkins CLI 命令并传递 Groovy 脚本
-        def listCmd = "${jenkinsCliCommand} groovy = <<< EOF\n${groovyScript}\nEOF"
-        sh(script: listCmd)
+            // 执行 Jenkins CLI 命令并传递 Groovy 脚本
+            def listCmd = "${jenkinsCliCommand} groovy = < __run.groovy "
+            sh(script: listCmd)
+        }
     }
 }
