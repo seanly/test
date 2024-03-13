@@ -10,6 +10,7 @@ FROM seanly/toolset:openjdk8u372
 USER root
 
 COPY --from=build /code/docker/release/xzs-3.9.0.jar /data/service/lib/
+COPY --from=build /code/release/web /data/service/web
 COPY start.sh /data/service/bin/
 
 WORKDIR /data/service/
