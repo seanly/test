@@ -1,0 +1,26 @@
+version: '3'
+services:
+  jenkins-master:
+    container_name: jenkins
+    image: registry.cn-chengdu.aliyuncs.com/seanly/test:jenkins-2.440.3-lts-jdk17-1 
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+      - 50000:50000
+    environment:
+      TZ: Asia/Shanghai
+      JAVA_OPTS: >-
+        -server
+        -Xmx2g -Xms1g
+        -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8
+        -Djenkins.install.runSetupWizard=false
+        -Dhudson.model.LoadStatistics.clock=2000
+        -Dorg.apache.commons.jelly.tags.fmt.timeZone=Asia/Shanghai
+        -Duser.timezone=Asia/Shanghai
+        -Dcom.sun.jndi.ldap.connect.pool.timeout=300000
+        -Dhudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID=true
+    volumes:
+      - jenkins-data:/var/jenkins_home:rw
+
+volumes:
+    jenkins-data:
