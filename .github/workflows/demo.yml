@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} is testing out GitHub Actions Manual 🚀
 on:
   workflow_dispatch:
     inputs:
-      log-level:
+      logLevel:
         description: 'Log level'
         required: true
         default: 'warning'
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "Log level: $LOG_LEVEL"
+          echo "Log level: $LEVEL"
           echo "Tags: $TAGS"
           echo "Environment: $ENVIRONMENT"
         env:
