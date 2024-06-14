@@ -1,0 +1,26 @@
+name: tke-manual-deploy
+
+on: workflow_dispatch
+
+jobs:
+  tke-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - run: |
+          VERSION=$(echo $GITHUB_REF |sed 's;refs/tags/jenkins-;;')
+          if [ "${VERSION}" == "" ]; then
+            echo "please select tke-v... tag."
+            exit 1
+          fi
+
+      - uses: yokawasa/action-setup-kube-tools@v0.11.1
+        with:
+          setup-tools: |
+            kubectl
+            helm
+            kustomize
+          kubectl: '1.29.3'
+          helm: '3.11.1'
+          kustomize: '5.0.0'
