@@ -29,7 +29,7 @@ jobs:
       - run: |
           VERSION=$(echo $GITHUB_REF |sed 's;refs/tags/jenkins-;;')
           echo "$VERSION"
-          docker buildx bake -f jenkins/docker-bake.hcl --progress=plain 
+          docker buildx bake -f jenkins/docker-bake.hcl --progress=plain --print
 
 
 # comment
