@@ -1,6 +1,9 @@
 name: tke-manual-deploy
 
-on: workflow_dispatch
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
 
 jobs:
   tke-deploy:
@@ -9,11 +12,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - run: |
+          echo "--//INFO: tag: ${TAG_NAME}"
           VERSION=$(echo $GITHUB_REF |sed 's;refs/tags/jenkins-;;')
           if [ "${VERSION}" == "" ]; then
             echo "please select tke-v... tag."
             exit 1
           fi
+        env:
+          TAG_NAME: ${{ github.event.release.tag_name }}
 
       - uses: yokawasa/action-setup-kube-tools@v0.11.1
         with:
