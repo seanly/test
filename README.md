@@ -1,1 +1,1 @@
-test
+Add CI pipeline.
